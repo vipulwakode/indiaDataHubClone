@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import Product from "./Product";
 import type { ProductType } from "../../types/productType";
+import { useSearch } from "../../context/useSearch";
 
 type ProductListingProps = {
   products: ProductType[];
@@ -9,6 +10,7 @@ type ProductListingProps = {
 const PAGE_SIZE = 10;
 
 const ProductListing = ({ products }: ProductListingProps) => {
+  const { searchQuery } = useSearch();
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const observerRef = useRef<HTMLDivElement | null>(null);
   const countRef = useRef(visibleCount);
@@ -52,9 +54,13 @@ const ProductListing = ({ products }: ProductListingProps) => {
     return () => observer.disconnect();
   }, []);
 
+  const filtered = products.filter((p) =>
+    p.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   console.log(visibleCount, "visible count");
 
-  const visibleProducts = products.slice(0, visibleCount);
+  const visibleProducts = filtered.slice(0, visibleCount);
   console.log("visible products", visibleProducts);
 
   return (
@@ -68,11 +74,17 @@ const ProductListing = ({ products }: ProductListingProps) => {
       </div>
 
       <div className="mt-2 space-y-2">
-        {visibleProducts.map((product) => (
-          <Product product={product} key={product.id} />
-        ))}
+        {filtered.length === 0 ? (
+          <div className="flex items-center justify-center text-gray-500 py-10 text-lg">
+            No results found
+          </div>
+        ) : (
+          visibleProducts.map((product) => (
+            <Product product={product} key={product.id} />
+          ))
+        )}
       </div>
-      <div ref={observerRef} className="h-4"></div>
+      {filtered.length > 0 && <div ref={observerRef} className="h-4"></div>}
     </div>
   );
 };

@@ -6,6 +6,7 @@ import initial_data2 from "../../data/response2.json";
 
 const CatalogueLayout = () => {
   const [data, setData] = useState(initial_data);
+
   const categories = data.categories;
   const products = data.frequent;
 
