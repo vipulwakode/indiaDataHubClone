@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Product from "./Product";
 import type { ProductType } from "../../types/productType";
 import { useSearch } from "../../context/useSearch";
@@ -26,13 +26,9 @@ const ProductListing = ({ products }: ProductListingProps) => {
     setVisibleCount(PAGE_SIZE);
   }, [products]);
 
-  const loadMore = () => {
-    console.log(visibleCount, products.length, "load more called");
-
-    setVisibleCount((prev) => {
-      return prev + PAGE_SIZE;
-    });
-  };
+  const loadMore = useCallback(() => {
+    setVisibleCount((prev) => prev + PAGE_SIZE);
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -52,13 +48,11 @@ const ProductListing = ({ products }: ProductListingProps) => {
     }
 
     return () => observer.disconnect();
-  }, []);
+  }, [loadMore]);
 
   const filtered = products.filter((p) =>
     p.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  console.log(visibleCount, "visible count");
 
   const visibleProducts = filtered.slice(0, visibleCount);
   console.log("visible products", visibleProducts);

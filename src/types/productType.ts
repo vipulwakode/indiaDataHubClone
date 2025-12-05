@@ -3,11 +3,11 @@ export type ProductType = {
   title: string;
   cat: string;
   subCat: string;
-  subset: string;
+  subset?: string;
   freq: string;
   unit: string;
   src: string;
-  sData: string;
+  sData?: string;
   datatype: string;
   hierarchy: string[];
   db: string;

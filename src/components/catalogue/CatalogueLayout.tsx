@@ -3,16 +3,18 @@ import Sidebar from "./Sidebar";
 import ProductListing from "./ProductListing";
 import initial_data from "../../data/response1.json";
 import initial_data2 from "../../data/response2.json";
+import type { CatalogueData } from "../../types/catalogueData";
 
 const CatalogueLayout = () => {
-  const [data, setData] = useState(initial_data);
-
+  const [data, setData] = useState<CatalogueData>(
+    initial_data as CatalogueData
+  );
   const categories = data.categories;
   const products = data.frequent;
 
   const handleCategoryChange = (type: "india" | "global") => {
-    if (type === "india") setData(initial_data);
-    if (type === "global") setData(initial_data2);
+    if (type === "india") setData(initial_data as CatalogueData);
+    if (type === "global") setData(initial_data2 as CatalogueData);
   };
 
   return (
